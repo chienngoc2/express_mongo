@@ -19,10 +19,23 @@ var app = express();
 connectDB();
 
 // 2. CONFIG CORS (Phải nằm trước các Routes)
-// Cho phép Ass2 kết nối tới
+// Cho phép Ass2 kết nối tới, cũng như các URL từ Vercel
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://localhost:5174",
+  process.env.FRONTEND_URL // Thêm biến môi trường cho Vercel frontend URL
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // Cổng của Frontend Ass2
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin) || origin.includes("vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   }),
 );

@@ -225,7 +225,7 @@ const AdminUserPage = () => {
                           )}
                         </td>
                         <td>
-                          <code style={{ fontSize: '0.72rem', color: '#6b7280', background: 'rgba(3,7,18,0.4)', padding: '3px 8px', borderRadius: '6px' }}>
+                          <code style={{ fontSize: '0.72rem', color: '#cbd5e1', background: 'rgba(3,7,18,0.4)', padding: '3px 8px', borderRadius: '6px' }}>
                             {u._id}
                           </code>
                         </td>

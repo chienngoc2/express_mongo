@@ -181,7 +181,7 @@ const UserDashboard = () => {
                   {/* Keywords */}
                   {currentQuestion?.keywords?.length > 0 && (
                     <div className="mb-4 pb-2">
-                      <span style={{ color: '#6b7280', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+                      <span style={{ color: '#9ca3af', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
                         <i className="fa-solid fa-tags me-1"></i>Từ khóa:
                       </span>
                       <div className="d-flex flex-wrap gap-2">
@@ -404,7 +404,7 @@ const UserDashboard = () => {
         <div className="glass-panel text-center py-5 my-4">
           <i className="fa-solid fa-receipt d-block mb-3 text-muted" style={{ fontSize: '3rem' }}></i>
           <h5 className="text-white mt-3">Chưa có đề thi nào</h5>
-          <p style={{ color: '#6b7280' }}>Hiện tại hệ thống chưa có bộ đề thi. Vui lòng quay lại sau!</p>
+          <p className="text-muted">Hiện tại hệ thống chưa có bộ đề thi. Vui lòng quay lại sau!</p>
         </div>
       ) : (
         <div className="row g-4">

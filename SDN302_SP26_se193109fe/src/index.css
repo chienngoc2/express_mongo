@@ -219,6 +219,7 @@ p {
   padding: 16px 20px !important;
   border: none !important;
   background: rgba(3, 7, 18, 0.6) !important;
+  color: var(--gray-400) !important;
 }
 .custom-table thead th:first-child { border-radius: 12px 0 0 12px; }
 .custom-table thead th:last-child { border-radius: 0 12px 12px 0; }

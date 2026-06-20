@@ -394,7 +394,18 @@ const AdminManagePage = () => {
               <div className="bezel-content p-5 text-center">
                 <i className="fa-solid fa-receipt text-muted mb-3" style={{ fontSize: '3rem' }}></i>
                 <h5 className="text-white mt-3">Đề thi này chưa có câu hỏi nào</h5>
-                <p className="text-muted small mb-0">Hãy bấm <strong style={{ color: 'var(--primary)' }}>"Thêm Câu Hỏi"</strong> để bổ sung vào ngân hàng đề.</p>
+                <p className="text-muted small mb-4">Hãy bấm <strong style={{ color: 'var(--primary)' }}>"Thêm Câu Hỏi"</strong> để bổ sung vào ngân hàng đề.</p>
+                <button
+                  onClick={() => openQuestionModal('create')}
+                  disabled={!currentQuiz}
+                  className="btn btn-primary d-inline-flex align-items-center gap-2 btn-magnetic"
+                  style={{ borderRadius: '12px' }}
+                >
+                  Thêm Câu Hỏi
+                  <span className="btn-icon-wrapper">
+                    <i className="fa-solid fa-plus" style={{ fontSize: '0.8rem' }}></i>
+                  </span>
+                </button>
               </div>
             </div>
           ) : (

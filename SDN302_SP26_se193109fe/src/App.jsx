@@ -5,7 +5,6 @@ import { fetchCurrentUser } from './redux/slices/authSlice';
 import Navbar from './components/Navbar';
 import AdminRoute from './components/AdminRoute';
 import Login from './pages/Login';
-import Register from './pages/Register';
 import UserDashboard from './pages/UserDashboard';
 import AdminManagePage from './pages/AdminManagePage';
 import AdminUserPage from './pages/AdminUserPage';
@@ -74,7 +73,7 @@ function App() {
 
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/register" element={<Login />} />
 
             {/* User routes */}
             <Route 

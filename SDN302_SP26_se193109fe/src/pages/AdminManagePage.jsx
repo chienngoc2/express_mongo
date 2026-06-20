@@ -300,7 +300,7 @@ const AdminManagePage = () => {
                             </div>
                           </td>
                           <td>
-                            <div className="text-muted small" style={{ maxWidth: '240px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <div className="text-muted small" style={{ maxWidth: '300px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', wordBreak: 'break-word', whiteSpace: 'normal' }}>
                               {quiz.description || <span className="text-muted fst-italic">Không có mô tả</span>}
                             </div>
                           </td>
@@ -489,7 +489,7 @@ const AdminManagePage = () => {
       {isQuizModalOpen && (
         <div className="modal show d-block animate-fade-in" tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
           <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content modal-content-glass">
+            <form onSubmit={handleQuizSubmit} className="modal-content modal-content-glass">
               <div className="modal-header border-bottom border-secondary border-opacity-10 px-4 py-3">
                 <h5 className="modal-title fw-bold text-white fs-5">
                   <i className={`fa-solid ${quizModalMode === 'create' ? 'fa-circle-plus' : 'fa-pen-to-square'} me-2 text-primary`}></i>
@@ -497,41 +497,39 @@ const AdminManagePage = () => {
                 </h5>
                 <button type="button" className="btn-close btn-close-white" onClick={() => setIsQuizModalOpen(false)}></button>
               </div>
-              <form onSubmit={handleQuizSubmit}>
-                <div className="modal-body p-4">
-                  {quizFormError && (
-                    <div className="alert mb-3" style={{ background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.25)', borderRadius: '12px', color: 'var(--danger)', fontSize: '0.85rem' }}>
-                      <i className="fa-solid fa-triangle-exclamation me-2"></i>{quizFormError}
-                    </div>
-                  )}
-                  <div className="mb-4">
-                    <label htmlFor="quizTitleInput" className="form-label">Tiêu đề đề thi <span className="text-danger ms-1">*</span></label>
-                    <input
-                      type="text" id="quizTitleInput" className="form-control"
-                      placeholder="VD: Trắc nghiệm Node.js nâng cao"
-                      value={quizForm.title}
-                      onChange={(e) => setQuizForm({ ...quizForm, title: e.target.value })}
-                      autoFocus
-                    />
+              <div className="modal-body p-4">
+                {quizFormError && (
+                  <div className="alert mb-3" style={{ background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.25)', borderRadius: '12px', color: 'var(--danger)', fontSize: '0.85rem' }}>
+                    <i className="fa-solid fa-triangle-exclamation me-2"></i>{quizFormError}
                   </div>
-                  <div className="mb-3">
-                    <label htmlFor="quizDescInput" className="form-label">Mô tả ngắn</label>
-                    <textarea
-                      id="quizDescInput" className="form-control" rows="3"
-                      placeholder="Mô tả tóm tắt nội dung đề..."
-                      value={quizForm.description}
-                      onChange={(e) => setQuizForm({ ...quizForm, description: e.target.value })}
-                    ></textarea>
-                  </div>
+                )}
+                <div className="mb-4">
+                  <label htmlFor="quizTitleInput" className="form-label">Tiêu đề đề thi <span className="text-danger ms-1">*</span></label>
+                  <input
+                    type="text" id="quizTitleInput" className="form-control"
+                    placeholder="VD: Trắc nghiệm Node.js nâng cao"
+                    value={quizForm.title}
+                    onChange={(e) => setQuizForm({ ...quizForm, title: e.target.value })}
+                    autoFocus
+                  />
                 </div>
-                <div className="modal-footer border-top border-secondary border-opacity-10 px-4 py-3">
-                  <button type="button" className="btn btn-secondary" onClick={() => setIsQuizModalOpen(false)}>Hủy</button>
-                  <button type="submit" className="btn btn-primary px-4" disabled={quizLoading}>
-                    {quizLoading ? <><span className="spinner-border spinner-border-sm me-2"></span>Đang lưu...</> : (quizModalMode === 'create' ? 'Tạo mới' : 'Lưu thay đổi')}
-                  </button>
+                <div className="mb-3">
+                  <label htmlFor="quizDescInput" className="form-label">Mô tả ngắn</label>
+                  <textarea
+                    id="quizDescInput" className="form-control" rows="3"
+                    placeholder="Mô tả tóm tắt nội dung đề..."
+                    value={quizForm.description}
+                    onChange={(e) => setQuizForm({ ...quizForm, description: e.target.value })}
+                  ></textarea>
                 </div>
-              </form>
-            </div>
+              </div>
+              <div className="modal-footer border-top border-secondary border-opacity-10 px-4 py-3">
+                <button type="button" className="btn btn-secondary" onClick={() => setIsQuizModalOpen(false)}>Hủy</button>
+                <button type="submit" className="btn btn-primary px-4" disabled={quizLoading}>
+                  {quizLoading ? <><span className="spinner-border spinner-border-sm me-2"></span>Đang lưu...</> : (quizModalMode === 'create' ? 'Tạo mới' : 'Lưu thay đổi')}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
@@ -540,7 +538,7 @@ const AdminManagePage = () => {
       {isQuestionModalOpen && (
         <div className="modal show d-block animate-fade-in" tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
           <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-            <div className="modal-content modal-content-glass">
+            <form onSubmit={handleQuestionSubmit} className="modal-content modal-content-glass">
               <div className="modal-header border-bottom border-secondary border-opacity-10 px-4 py-3">
                 <h5 className="modal-title fw-bold text-white fs-5">
                   <i className={`fa-solid ${questionModalMode === 'create' ? 'fa-circle-plus' : 'fa-pen-to-square'} me-2 text-secondary`}></i>
@@ -548,88 +546,86 @@ const AdminManagePage = () => {
                 </h5>
                 <button type="button" className="btn-close btn-close-white" onClick={() => setIsQuestionModalOpen(false)}></button>
               </div>
-              <form onSubmit={handleQuestionSubmit}>
-                <div className="modal-body p-4">
-                  {questionFormError && (
-                    <div className="alert mb-3" style={{ background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.25)', borderRadius: '12px', color: 'var(--danger)', fontSize: '0.85rem' }}>
-                      <i className="fa-solid fa-triangle-exclamation me-2"></i>{questionFormError}
-                    </div>
-                  )}
+              <div className="modal-body p-4">
+                {questionFormError && (
+                  <div className="alert mb-3" style={{ background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.25)', borderRadius: '12px', color: 'var(--danger)', fontSize: '0.85rem' }}>
+                    <i className="fa-solid fa-triangle-exclamation me-2"></i>{questionFormError}
+                  </div>
+                )}
 
-                  {/* Question text */}
-                  <div className="mb-4">
-                    <label htmlFor="questionTextInput" className="form-label">
-                      Nội dung câu hỏi <span className="text-danger ms-1">*</span>
-                    </label>
-                    <textarea
-                      id="questionTextInput" className="form-control" rows="3"
-                      placeholder="Nhập nội dung câu hỏi..."
-                      value={questionForm.text}
-                      onChange={(e) => setQuestionForm({ ...questionForm, text: e.target.value })}
-                      autoFocus
+                {/* Question text */}
+                <div className="mb-4">
+                  <label htmlFor="questionTextInput" className="form-label">
+                    Nội dung câu hỏi <span className="text-danger ms-1">*</span>
+                  </label>
+                  <textarea
+                    id="questionTextInput" className="form-control" rows="3"
+                    placeholder="Nhập nội dung câu hỏi..."
+                    value={questionForm.text}
+                    onChange={(e) => setQuestionForm({ ...questionForm, text: e.target.value })}
+                    autoFocus
+                  />
+                </div>
+
+                {/* Options */}
+                <div className="mb-4">
+                  <label className="form-label">Các lựa chọn trả lời <span className="text-danger ms-1">*</span></label>
+                  <div className="d-flex flex-column gap-3">
+                    {['option1', 'option2', 'option3', 'option4'].map((key, idx) => (
+                      <div key={key} className="d-flex align-items-center gap-3">
+                        <span className="option-label" style={{
+                          width: '28px', height: '28px', fontSize: '0.75rem',
+                          background: parseInt(questionForm.correctAnswerIndex) === idx ? 'rgba(52,211,153,0.15)' : 'rgba(129,140,248,0.12)',
+                          border: `1px solid ${parseInt(questionForm.correctAnswerIndex) === idx ? 'rgba(52,211,153,0.3)' : 'rgba(129,140,248,0.25)'}`,
+                          color: parseInt(questionForm.correctAnswerIndex) === idx ? 'var(--success)' : 'var(--primary)'
+                        }}>
+                          {OPTION_LABELS[idx]}
+                        </span>
+                        <input
+                          type="text" className="form-control"
+                          placeholder={`Phương án ${OPTION_LABELS[idx]}`}
+                          value={questionForm[key]}
+                          onChange={(e) => setQuestionForm({ ...questionForm, [key]: e.target.value })}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="row g-4">
+                  {/* Correct answer */}
+                  <div className="col-md-6">
+                    <label htmlFor="correctAnswerSelect" className="form-label">Đáp án đúng</label>
+                    <select
+                      id="correctAnswerSelect" className="form-select"
+                      value={questionForm.correctAnswerIndex}
+                      onChange={(e) => setQuestionForm({ ...questionForm, correctAnswerIndex: parseInt(e.target.value, 10) })}
+                    >
+                      <option value={0}>Lựa chọn A</option>
+                      <option value={1}>Lựa chọn B</option>
+                      <option value={2}>Lựa chọn C</option>
+                      <option value={3}>Lựa chọn D</option>
+                    </select>
+                  </div>
+                  {/* Keywords */}
+                  <div className="col-md-6">
+                    <label htmlFor="keywordsInput" className="form-label">Từ khóa <span className="text-muted small ms-1">(phân cách bằng dấu phẩy)</span></label>
+                    <input
+                      type="text" id="keywordsInput" className="form-control"
+                      placeholder="VD: nodejs, database"
+                      value={questionForm.keywords}
+                      onChange={(e) => setQuestionForm({ ...questionForm, keywords: e.target.value })}
                     />
                   </div>
-
-                  {/* Options */}
-                  <div className="mb-4">
-                    <label className="form-label">Các lựa chọn trả lời <span className="text-danger ms-1">*</span></label>
-                    <div className="d-flex flex-column gap-3">
-                      {['option1', 'option2', 'option3', 'option4'].map((key, idx) => (
-                        <div key={key} className="d-flex align-items-center gap-3">
-                          <span className="option-label" style={{
-                            width: '28px', height: '28px', fontSize: '0.75rem',
-                            background: parseInt(questionForm.correctAnswerIndex) === idx ? 'rgba(52,211,153,0.15)' : 'rgba(129,140,248,0.12)',
-                            border: `1px solid ${parseInt(questionForm.correctAnswerIndex) === idx ? 'rgba(52,211,153,0.3)' : 'rgba(129,140,248,0.25)'}`,
-                            color: parseInt(questionForm.correctAnswerIndex) === idx ? 'var(--success)' : 'var(--primary)'
-                          }}>
-                            {OPTION_LABELS[idx]}
-                          </span>
-                          <input
-                            type="text" className="form-control"
-                            placeholder={`Phương án ${OPTION_LABELS[idx]}`}
-                            value={questionForm[key]}
-                            onChange={(e) => setQuestionForm({ ...questionForm, [key]: e.target.value })}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="row g-4">
-                    {/* Correct answer */}
-                    <div className="col-md-6">
-                      <label htmlFor="correctAnswerSelect" className="form-label">Đáp án đúng</label>
-                      <select
-                        id="correctAnswerSelect" className="form-select"
-                        value={questionForm.correctAnswerIndex}
-                        onChange={(e) => setQuestionForm({ ...questionForm, correctAnswerIndex: parseInt(e.target.value, 10) })}
-                      >
-                        <option value={0}>Lựa chọn A</option>
-                        <option value={1}>Lựa chọn B</option>
-                        <option value={2}>Lựa chọn C</option>
-                        <option value={3}>Lựa chọn D</option>
-                      </select>
-                    </div>
-                    {/* Keywords */}
-                    <div className="col-md-6">
-                      <label htmlFor="keywordsInput" className="form-label">Từ khóa <span className="text-muted small ms-1">(phân cách bằng dấu phẩy)</span></label>
-                      <input
-                        type="text" id="keywordsInput" className="form-control"
-                        placeholder="VD: nodejs, database"
-                        value={questionForm.keywords}
-                        onChange={(e) => setQuestionForm({ ...questionForm, keywords: e.target.value })}
-                      />
-                    </div>
-                  </div>
                 </div>
-                <div className="modal-footer border-top border-secondary border-opacity-10 px-4 py-3">
-                  <button type="button" className="btn btn-secondary" onClick={() => setIsQuestionModalOpen(false)}>Hủy</button>
-                  <button type="submit" className="btn btn-primary px-4" disabled={questionLoading}>
-                    {questionLoading ? <><span className="spinner-border spinner-border-sm me-2"></span>Đang lưu...</> : (questionModalMode === 'create' ? 'Thêm mới' : 'Lưu thay đổi')}
-                  </button>
-                </div>
-              </form>
-            </div>
+              </div>
+              <div className="modal-footer border-top border-secondary border-opacity-10 px-4 py-3">
+                <button type="button" className="btn btn-secondary" onClick={() => setIsQuestionModalOpen(false)}>Hủy</button>
+                <button type="submit" className="btn btn-primary px-4" disabled={questionLoading}>
+                  {questionLoading ? <><span className="spinner-border spinner-border-sm me-2"></span>Đang lưu...</> : (questionModalMode === 'create' ? 'Thêm mới' : 'Lưu thay đổi')}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

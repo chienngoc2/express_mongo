@@ -88,7 +88,7 @@ exports.updateQuestion = async (req, res, next) => {
         err.status = 404;
         return next(err);
     }
-    if (!req.user.admin && !question.author.equals(req.user._id)) {
+    if (!question.author.equals(req.user._id)) {
         const err = new Error('You are not authorized to perform this operation!');
         err.status = 403; // Mã 403: Forbidden
         return next(err); 
@@ -111,7 +111,7 @@ exports.deleteQuestion = async (req, res, next) => {
         err.status = 404;
         return next(err);
     }
-    if (!req.user.admin && !question.author.equals(req.user._id)) {
+    if (!question.author.equals(req.user._id)) {
         const err = new Error('You are not authorized to perform this operation!');
         err.status = 403; // Mã 403: Forbidden
         return next(err); 

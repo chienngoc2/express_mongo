@@ -47,9 +47,14 @@ exports.getQuizById = async (req, res) => {
 // UPDATE quiz
 exports.updateQuiz = async (req, res, next) => {
     try {
+        const { title, description } = req.body;
+        const updateData = {};
+        if (title !== undefined) updateData.title = title;
+        if (description !== undefined) updateData.description = description;
+
         const quiz = await Quiz.findByIdAndUpdate(
             req.params.quizId, 
-            { $set: req.body }, 
+            { $set: updateData }, 
             { new: true }//  trả về dữ liệu MỚI sau khi đã sửa đổi
         );
         if (!quiz) {

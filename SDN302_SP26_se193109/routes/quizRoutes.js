@@ -12,14 +12,14 @@ router.get("/my/list", authenticate.verifyUser, controller.getMyQuizzes);
 // GET single quiz (public)
 router.get("/:quizId", controller.getQuizById);
 
-// CREATE quiz (any logged-in user)
-router.post("/", authenticate.verifyUser, controller.createQuiz);
+// CREATE quiz (only admin)
+router.post("/", authenticate.verifyUser, authenticate.verifyAdmin, controller.createQuiz);
 
-// UPDATE quiz (only the quiz owner)
-router.put("/:quizId", authenticate.verifyUser, authenticate.verifyQuizOwner, controller.updateQuiz);
+// UPDATE quiz (only admin)
+router.put("/:quizId", authenticate.verifyUser, authenticate.verifyAdmin, controller.updateQuiz);
 
-// DELETE quiz (only the quiz owner)
-router.delete("/:quizId", authenticate.verifyUser, authenticate.verifyQuizOwner, controller.deleteQuiz);
+// DELETE quiz (only admin)
+router.delete("/:quizId", authenticate.verifyUser, authenticate.verifyAdmin, controller.deleteQuiz);
 
 // GET quiz by keyword
 router.get("/:quizId/populate", controller.getQuizByKeyword);

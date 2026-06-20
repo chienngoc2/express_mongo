@@ -62,15 +62,15 @@ const UserDashboard = () => {
   };
 
   const getScoreColor = (ratio) => {
-    if (ratio >= 0.8) return '#10b981';
-    if (ratio >= 0.5) return '#f59e0b';
-    return '#ef4444';
+    if (ratio >= 0.8) return 'var(--success)';
+    if (ratio >= 0.5) return 'var(--warning)';
+    return 'var(--danger)';
   };
 
   const getScoreMessage = (ratio) => {
-    if (ratio >= 0.8) return { icon: 'fa-face-laugh-beam', text: 'Xuất sắc! Bạn nắm kiến thức rất vững.', color: '#10b981' };
-    if (ratio >= 0.5) return { icon: 'fa-face-smile', text: 'Đạt yêu cầu! Tiếp tục ôn tập nhé.', color: '#f59e0b' };
-    return { icon: 'fa-face-frown', text: 'Chưa đạt! Hãy xem lại kiến thức và thử lại.', color: '#ef4444' };
+    if (ratio >= 0.8) return { icon: 'fa-face-laugh-beam', text: 'Xuất sắc! Bạn nắm kiến thức rất vững.', color: 'var(--success)' };
+    if (ratio >= 0.5) return { icon: 'fa-face-smile', text: 'Đạt yêu cầu! Tiếp tục ôn tập nhé.', color: 'var(--warning)' };
+    return { icon: 'fa-face-frown', text: 'Chưa đạt! Hãy xem lại kiến thức và thử lại.', color: 'var(--danger)' };
   };
 
   // ── LOADING ──
@@ -80,7 +80,7 @@ const UserDashboard = () => {
         <div className="spinner-border text-primary mb-3" style={{ width: '3rem', height: '3rem' }} role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
-        <p className="text-muted">Đang tải danh sách bài thi...</p>
+        <p className="text-muted small">Đang tải danh sách bài thi...</p>
       </div>
     );
   }
@@ -95,241 +95,226 @@ const UserDashboard = () => {
     const ratio = questions.length > 0 ? score / questions.length : 0;
 
     return (
-      <div className="container py-4 animate-slide-up" style={{ maxWidth: '760px' }}>
-
+      <div className="container py-4 animate-slide-up" style={{ maxWidth: '780px' }}>
         {!quizFinished ? (
           /* ── QUESTION SCREEN ── */
-          <div className="glass-panel p-4 p-md-5">
-            {/* Header */}
-            <div className="d-flex justify-content-between align-items-start mb-4">
-              <div>
-                <div className="text-muted small mb-1">
-                  <i className="fa-solid fa-book-open me-1"></i> {currentQuiz.title}
+          <div className="bezel-container">
+            <div className="bezel-content p-4 p-md-5">
+              {/* Header */}
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                  <div className="text-muted small mb-1">
+                    <i className="fa-solid fa-book-open me-1 text-primary"></i> {currentQuiz.title}
+                  </div>
+                  <div className="fw-semibold text-primary" style={{ fontSize: '0.9rem' }}>
+                    Câu {currentQuestionIndex + 1} / {questions.length}
+                    <span className="text-muted ms-2 small">({totalAnswered} đã trả lời)</span>
+                  </div>
                 </div>
-                <div className="fw-semibold" style={{ color: 'var(--primary)', fontSize: '0.9rem' }}>
-                  Câu {currentQuestionIndex + 1} / {questions.length}
-                  <span className="text-muted ms-2" style={{ fontSize: '0.8rem' }}>({totalAnswered} đã trả lời)</span>
-                </div>
+                <button
+                  onClick={handleQuitQuiz}
+                  className="btn btn-secondary btn-sm px-3 d-flex align-items-center gap-2"
+                  style={{ padding: '8px 16px', borderRadius: '10px' }}
+                >
+                  <i className="fa-solid fa-xmark"></i> Thoát
+                </button>
               </div>
-              <button
-                onClick={handleQuitQuiz}
-                style={{
-                  background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)',
-                  color: '#f87171', borderRadius: '10px', padding: '6px 14px',
-                  fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px'
-                }}
-              >
-                <i className="fa-solid fa-xmark"></i> Thoát
-              </button>
-            </div>
 
-            {/* Progress Bar */}
-            <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', marginBottom: '28px', overflow: 'hidden' }}>
-              <div style={{
-                height: '100%', borderRadius: '3px', transition: 'width 0.4s ease',
-                background: 'linear-gradient(90deg, var(--primary), var(--secondary))',
-                width: `${progressPct}%`
-              }}></div>
-            </div>
-
-            {!hasQuestions ? (
-              <div className="text-center py-5">
-                <i className="fa-solid fa-receipt fs-1 text-muted d-block mb-3"></i>
-                <p className="text-muted">Bài thi này chưa có câu hỏi nào!</p>
+              {/* Progress Bar */}
+              <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', marginBottom: '32px', overflow: 'hidden' }}>
+                <div style={{
+                  height: '100%', borderRadius: '3px', transition: 'width 0.4s ease',
+                  background: 'linear-gradient(90deg, var(--primary), var(--secondary))',
+                  width: `${progressPct}%`
+                }}></div>
               </div>
-            ) : (
-              <>
-                {/* Question */}
-                <div className="mb-4">
-                  <p className="text-muted small mb-2 text-uppercase fw-semibold" style={{ letterSpacing: '0.05em', fontSize: '0.75rem' }}>
-                    Câu hỏi {currentQuestionIndex + 1}
-                  </p>
-                  <h5 className="fw-semibold text-white mb-0" style={{ lineHeight: '1.6', fontSize: '1.05rem' }}>
-                    {currentQuestion?.text}
-                  </h5>
-                </div>
 
-                {/* Options */}
-                <div className="d-flex flex-column gap-2 mb-5">
-                  {currentQuestion?.options?.map((option, idx) => {
-                    const isSelected = selectedAnswers[currentQuestionIndex] === idx;
-                    return (
-                      <div
-                        key={idx}
-                        onClick={() => handleSelectOption(idx)}
+              {!hasQuestions ? (
+                <div className="text-center py-5">
+                  <i className="fa-solid fa-receipt fs-1 text-muted d-block mb-3"></i>
+                  <p className="text-muted">Bài thi này chưa có câu hỏi nào!</p>
+                </div>
+              ) : (
+                <>
+                  {/* Question */}
+                  <div className="mb-4">
+                    <p className="text-muted small mb-2 text-uppercase fw-semibold" style={{ letterSpacing: '0.08em', fontSize: '0.75rem' }}>
+                      Câu hỏi {currentQuestionIndex + 1}
+                    </p>
+                    <h4 className="fw-semibold text-white mb-0" style={{ lineHeight: '1.6', fontSize: '1.2rem', letterSpacing: '-0.02em' }}>
+                      {currentQuestion?.text}
+                    </h4>
+                  </div>
+
+                  {/* Options */}
+                  <div className="d-flex flex-column gap-3 mb-5">
+                    {currentQuestion?.options?.map((option, idx) => {
+                      const isSelected = selectedAnswers[currentQuestionIndex] === idx;
+                      return (
+                        <div
+                          key={idx}
+                          onClick={() => handleSelectOption(idx)}
+                          className={`quiz-option-card ${isSelected ? 'selected' : ''}`}
+                        >
+                          <div className="d-flex align-items-center gap-3">
+                            <span className="option-label" style={{
+                              background: isSelected ? 'rgba(129, 140, 248, 0.25)' : 'rgba(255,255,255,0.06)',
+                              border: isSelected ? '1px solid rgba(129, 140, 248, 0.4)' : '1px solid rgba(255,255,255,0.1)',
+                              color: isSelected ? 'white' : '#9ca3af',
+                              width: '32px',
+                              height: '32px'
+                            }}>
+                              {OPTION_LABELS[idx]}
+                            </span>
+                            <span style={{ color: isSelected ? 'white' : '#cbd5e1', flex: 1, fontSize: '0.95rem' }}>
+                              {option}
+                            </span>
+                            {isSelected && (
+                              <i className="fa-solid fa-circle-check text-primary" style={{ fontSize: '1rem' }}></i>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Keywords */}
+                  {currentQuestion?.keywords?.length > 0 && (
+                    <div className="mb-4 pb-2">
+                      <span style={{ color: '#6b7280', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
+                        <i className="fa-solid fa-tags me-1"></i>Từ khóa:
+                      </span>
+                      <div className="d-flex flex-wrap gap-2">
+                        {currentQuestion.keywords.map((kw, idx) => (
+                          <span key={idx} className="keyword-chip">
+                            {kw}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Navigation */}
+                  <div className="d-flex justify-content-between align-items-center pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                    <button
+                      onClick={handlePrevQuestion}
+                      disabled={currentQuestionIndex === 0}
+                      className="btn btn-secondary px-3"
+                      style={{ borderRadius: '10px', fontSize: '0.875rem' }}
+                    >
+                      <i className="fa-solid fa-arrow-left me-2"></i>Câu trước
+                    </button>
+
+                    {currentQuestionIndex === questions.length - 1 ? (
+                      <button
+                        onClick={handleSubmitQuiz}
+                        className="btn btn-primary px-4 btn-magnetic"
                         style={{
-                          display: 'flex', alignItems: 'center', gap: '14px',
-                          padding: '14px 18px', borderRadius: '12px', cursor: 'pointer',
-                          transition: 'all 0.2s',
-                          background: isSelected
-                            ? 'linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.2) 100%)'
-                            : 'rgba(30,41,59,0.4)',
-                          border: isSelected
-                            ? '1px solid rgba(99,102,241,0.5)'
-                            : '1px solid rgba(255,255,255,0.07)',
-                          boxShadow: isSelected ? '0 0 20px rgba(99,102,241,0.15)' : 'none',
+                          background: 'linear-gradient(135deg, #10b981, #059669)',
+                          boxShadow: '0 4px 15px rgba(16,185,129,0.3)',
+                          borderRadius: '10px',
+                          fontSize: '0.875rem'
                         }}
                       >
-                        <span style={{
-                          width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontSize: '0.8rem', fontWeight: 700,
-                          background: isSelected ? 'rgba(99,102,241,0.3)' : 'rgba(255,255,255,0.06)',
-                          border: isSelected ? '1px solid rgba(99,102,241,0.5)' : '1px solid rgba(255,255,255,0.1)',
-                          color: isSelected ? 'white' : '#94a3b8',
-                        }}>
-                          {OPTION_LABELS[idx]}
+                        Nộp bài
+                        <span className="btn-icon-wrapper ms-2">
+                          <i className="fa-solid fa-paper-plane" style={{ fontSize: '0.75rem' }}></i>
                         </span>
-                        <span style={{ color: isSelected ? 'white' : '#cbd5e1', flex: 1, fontSize: '0.95rem' }}>
-                          {option}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleNextQuestion}
+                        disabled={selectedAnswers[currentQuestionIndex] === undefined}
+                        className="btn btn-primary px-4 btn-magnetic"
+                        style={{ borderRadius: '10px', fontSize: '0.875rem' }}
+                      >
+                        Tiếp theo
+                        <span className="btn-icon-wrapper ms-2">
+                          <i className="fa-solid fa-arrow-right" style={{ fontSize: '0.75rem' }}></i>
                         </span>
-                        {isSelected && (
-                          <i className="fa-solid fa-circle-check" style={{ color: 'var(--primary)', fontSize: '1rem' }}></i>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Keywords */}
-                {currentQuestion?.keywords?.length > 0 && (
-                  <div className="mb-4 pb-2">
-                    <span style={{ color: '#64748b', fontSize: '0.75rem', display: 'block', marginBottom: '8px' }}>
-                      <i className="fa-solid fa-tags me-1"></i>Từ khóa:
-                    </span>
-                    <div className="d-flex flex-wrap gap-2">
-                      {currentQuestion.keywords.map((kw, idx) => (
-                        <span key={idx} className="keyword-chip">
-                          {kw}
-                        </span>
-                      ))}
-                    </div>
+                      </button>
+                    )}
                   </div>
-                )}
-
-                {/* Navigation */}
-                <div className="d-flex justify-content-between align-items-center pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                  <button
-                    onClick={handlePrevQuestion}
-                    disabled={currentQuestionIndex === 0}
-                    style={{
-                      background: 'rgba(30,41,59,0.6)', border: '1px solid rgba(255,255,255,0.1)',
-                      color: currentQuestionIndex === 0 ? '#475569' : '#e2e8f0',
-                      borderRadius: '10px', padding: '9px 18px', cursor: currentQuestionIndex === 0 ? 'not-allowed' : 'pointer',
-                      display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.875rem', fontWeight: 500,
-                    }}
-                  >
-                    <i className="fa-solid fa-arrow-left"></i> Câu trước
-                  </button>
-
-                  {currentQuestionIndex === questions.length - 1 ? (
-                    <button
-                      onClick={handleSubmitQuiz}
-                      style={{
-                        background: 'linear-gradient(135deg, #10b981, #059669)',
-                        border: 'none', color: 'white', borderRadius: '10px',
-                        padding: '9px 24px', cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', gap: '8px',
-                        fontSize: '0.875rem', fontWeight: 600,
-                        boxShadow: '0 4px 15px rgba(16,185,129,0.3)',
-                      }}
-                    >
-                      Nộp bài <i className="fa-solid fa-paper-plane"></i>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleNextQuestion}
-                      disabled={selectedAnswers[currentQuestionIndex] === undefined}
-                      style={{
-                        background: selectedAnswers[currentQuestionIndex] !== undefined
-                          ? 'linear-gradient(135deg, var(--primary), var(--secondary))'
-                          : 'rgba(30,41,59,0.6)',
-                        border: selectedAnswers[currentQuestionIndex] !== undefined ? 'none' : '1px solid rgba(255,255,255,0.1)',
-                        color: selectedAnswers[currentQuestionIndex] !== undefined ? 'white' : '#475569',
-                        borderRadius: '10px', padding: '9px 18px',
-                        cursor: selectedAnswers[currentQuestionIndex] !== undefined ? 'pointer' : 'not-allowed',
-                        display: 'flex', alignItems: 'center', gap: '8px',
-                        fontSize: '0.875rem', fontWeight: 600,
-                        boxShadow: selectedAnswers[currentQuestionIndex] !== undefined ? '0 4px 15px rgba(99,102,241,0.3)' : 'none',
-                      }}
-                    >
-                      Tiếp theo <i className="fa-solid fa-arrow-right"></i>
-                    </button>
-                  )}
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
         ) : (
           /* ── RESULT SCREEN ── */
-          <div className="glass-panel p-4 p-md-5 text-center animate-fade-in">
-            {/* Trophy */}
-            <div style={{
-              width: '90px', height: '90px', borderRadius: '50%', margin: '0 auto 24px',
-              background: `radial-gradient(circle, ${getScoreColor(ratio)}33 0%, ${getScoreColor(ratio)}11 100%)`,
-              border: `2px solid ${getScoreColor(ratio)}44`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '2.2rem', color: getScoreColor(ratio),
-            }}>
-              <i className="fa-solid fa-trophy"></i>
-            </div>
-
-            <h3 className="fw-bold text-white mb-1">Kết Quả Bài Thi</h3>
-            <p style={{ color: '#94a3b8' }} className="mb-4">
-              <i className="fa-solid fa-book-open me-1" style={{ color: 'var(--primary)' }}></i>
-              {currentQuiz.title}
-            </p>
-
-            {/* Score display */}
-            <div style={{
-              display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '28px',
-              padding: '24px', borderRadius: '16px',
-              background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.07)',
-            }}>
-              <div>
-                <div className="fw-bold text-white" style={{ fontSize: '2.5rem', lineHeight: 1 }}>
-                  {score}<span style={{ color: '#64748b', fontSize: '1.5rem' }}>/{questions.length}</span>
-                </div>
-                <div style={{ color: '#64748b', fontSize: '0.8rem', marginTop: '6px' }}>Số câu đúng</div>
+          <div className="bezel-container">
+            <div className="bezel-content p-4 p-md-5 text-center animate-fade-in">
+              {/* Trophy orb */}
+              <div style={{
+                width: '96px',
+                height: '96px',
+                borderRadius: '50%',
+                margin: '0 auto 24px',
+                background: `radial-gradient(circle, ${getScoreColor(ratio)}25 0%, transparent 100%)`,
+                border: `2px solid ${getScoreColor(ratio)}35`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '2.4rem',
+                color: getScoreColor(ratio),
+                boxShadow: `0 10px 25px -5px ${getScoreColor(ratio)}20`
+              }}>
+                <i className="fa-solid fa-trophy animate-bounce"></i>
               </div>
-              <div style={{ width: '1px', background: 'rgba(255,255,255,0.07)' }}></div>
-              <div>
-                <div className="fw-bold" style={{ fontSize: '2.5rem', lineHeight: 1, color: getScoreColor(ratio) }}>
-                  {Math.round(ratio * 100)}%
+
+              <h3 className="fw-bold text-white mb-2" style={{ letterSpacing: '-0.02em' }}>Kết Quả Bài Thi</h3>
+              <p style={{ color: '#9ca3af' }} className="mb-4 small">
+                <i className="fa-solid fa-book-open me-1 text-primary"></i>
+                {currentQuiz.title}
+              </p>
+
+              {/* Score card grid */}
+              <div style={{
+                display: 'flex', justifyContent: 'center', gap: '32px', marginBottom: '32px',
+                padding: '24px 32px', borderRadius: '16px',
+                background: 'rgba(3, 7, 18, 0.4)', border: '1px solid rgba(255,255,255,0.06)',
+              }}>
+                <div>
+                  <div className="fw-bold text-white" style={{ fontSize: '2.8rem', lineHeight: 1, letterSpacing: '-0.03em' }}>
+                    {score}<span style={{ color: '#4b5563', fontSize: '1.6rem' }}>/{questions.length}</span>
+                  </div>
+                  <div style={{ color: '#9ca3af', fontSize: '0.78rem', marginTop: '8px' }}>Số câu đúng</div>
                 </div>
-                <div style={{ color: '#64748b', fontSize: '0.8rem', marginTop: '6px' }}>Điểm phần trăm</div>
+                <div style={{ width: '1px', background: 'rgba(255,255,255,0.06)' }}></div>
+                <div>
+                  <div className="fw-bold" style={{ fontSize: '2.8rem', lineHeight: 1, color: getScoreColor(ratio), letterSpacing: '-0.03em' }}>
+                    {Math.round(ratio * 100)}%
+                  </div>
+                  <div style={{ color: '#9ca3af', fontSize: '0.78rem', marginTop: '8px' }}>Điểm phần trăm</div>
+                </div>
               </div>
-            </div>
 
-            {/* Message */}
-            {(() => {
-              const msg = getScoreMessage(ratio);
-              return (
-                <p className="fw-semibold mb-4" style={{ color: msg.color, fontSize: '1rem' }}>
-                  <i className={`fa-solid ${msg.icon} me-2`}></i>{msg.text}
-                </p>
-              );
-            })()}
+              {/* Feedback text */}
+              {(() => {
+                const msg = getScoreMessage(ratio);
+                return (
+                  <p className="fw-semibold mb-5" style={{ color: msg.color, fontSize: '1.05rem' }}>
+                    <i className={`fa-solid ${msg.icon} me-2`}></i>{msg.text}
+                  </p>
+                );
+              })()}
 
-            {/* Actions */}
-            <div className="d-flex justify-content-center gap-3">
-              <button
-                onClick={() => handleStartQuiz(currentQuiz._id)}
-                className="btn btn-primary"
-                style={{ borderRadius: '10px', padding: '10px 22px' }}
-              >
-                <i className="fa-solid fa-rotate-left me-2"></i>Làm lại
-              </button>
-              <button
-                onClick={handleQuitQuiz}
-                style={{
-                  background: 'rgba(30,41,59,0.6)', border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#e2e8f0', borderRadius: '10px', padding: '10px 22px',
-                  cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600,
-                }}
-              >
-                <i className="fa-solid fa-house me-2"></i>Về trang chủ
-              </button>
+              {/* Actions */}
+              <div className="d-flex justify-content-center gap-3">
+                <button
+                  onClick={() => handleStartQuiz(currentQuiz._id)}
+                  className="btn btn-primary"
+                  style={{ borderRadius: '12px', padding: '12px 24px' }}
+                >
+                  <i className="fa-solid fa-rotate-left me-2"></i>Làm lại
+                </button>
+                <button
+                  onClick={handleQuitQuiz}
+                  className="btn btn-secondary"
+                  style={{ borderRadius: '12px', padding: '12px 24px' }}
+                >
+                  <i className="fa-solid fa-house me-2"></i>Về trang chủ
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -340,76 +325,75 @@ const UserDashboard = () => {
   // ── QUIZ LIST VIEW ──
   return (
     <div className="container py-4 animate-slide-up">
-
       {/* Welcome Header */}
-      <div className="mb-5">
+      <div className="mb-5 mt-2">
         <div className="d-flex align-items-center gap-3 mb-2">
           <div style={{
-            width: '48px', height: '48px', borderRadius: '14px',
+            width: '52px', height: '52px', borderRadius: '14px',
             background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.3rem', flexShrink: 0,
-            boxShadow: '0 4px 20px rgba(99,102,241,0.35)',
+            fontSize: '1.4rem', flexShrink: 0,
+            boxShadow: '0 8px 24px rgba(129, 140, 248, 0.35)',
           }}>
             <i className="fa-solid fa-graduation-cap text-white"></i>
           </div>
           <div>
-            <h2 className="fw-bold text-white mb-0" style={{ fontSize: '1.6rem', letterSpacing: '-0.03em' }}>
+            <h2 className="fw-bold text-white mb-0" style={{ fontSize: '1.7rem', letterSpacing: '-0.03em' }}>
               Xin chào, <span style={{ color: 'var(--primary)' }}>{user?.username || 'Học viên'}</span>! 👋
             </h2>
-            <p style={{ color: '#94a3b8', marginBottom: 0, fontSize: '0.9rem' }}>
-              Chọn một bộ đề thi bên dưới để kiểm tra và củng cố kiến thức của bạn.
+            <p className="small text-muted mb-0 mt-1">
+              Chọn một bộ đề thi bên dưới để bắt đầu rèn luyện kỹ năng của bạn.
             </p>
           </div>
         </div>
       </div>
 
       {/* Stats bar */}
-      <div className="row g-3 mb-5">
+      <div className="row g-4 mb-5">
         <div className="col-md-4">
           <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(99,102,241,0.15)' }}>
+            <div className="stat-icon animate-pulse" style={{ background: 'rgba(129,140,248,0.12)' }}>
               <i className="fa-solid fa-book-open" style={{ color: 'var(--primary)' }}></i>
             </div>
             <div>
-              <div className="fw-bold text-white" style={{ fontSize: '1.5rem', lineHeight: 1 }}>{quizzes.length}</div>
-              <div style={{ color: '#94a3b8', fontSize: '0.82rem', marginTop: '4px' }}>Đề thi hiện có</div>
+              <div className="fw-bold text-white" style={{ fontSize: '1.6rem', lineHeight: 1, letterSpacing: '-0.02em' }}>{quizzes.length}</div>
+              <div style={{ color: '#9ca3af', fontSize: '0.8rem', marginTop: '6px' }}>Đề thi hiện có</div>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(16,185,129,0.15)' }}>
-              <i className="fa-solid fa-circle-question" style={{ color: '#10b981' }}></i>
+            <div className="stat-icon" style={{ background: 'rgba(52,211,153,0.12)' }}>
+              <i className="fa-solid fa-circle-question" style={{ color: 'var(--success)' }}></i>
             </div>
             <div>
-              <div className="fw-bold text-white" style={{ fontSize: '1.5rem', lineHeight: 1 }}>
+              <div className="fw-bold text-white" style={{ fontSize: '1.6rem', lineHeight: 1, letterSpacing: '-0.02em' }}>
                 {quizzes.reduce((sum, q) => sum + (q.questions?.length || 0), 0)}
               </div>
-              <div style={{ color: '#94a3b8', fontSize: '0.82rem', marginTop: '4px' }}>Tổng câu hỏi</div>
+              <div style={{ color: '#9ca3af', fontSize: '0.8rem', marginTop: '6px' }}>Tổng số câu hỏi</div>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(245,158,11,0.15)' }}>
-              <i className="fa-solid fa-fire-flame-curved" style={{ color: '#f59e0b' }}></i>
+            <div className="stat-icon" style={{ background: 'rgba(251,191,36,0.12)' }}>
+              <i className="fa-solid fa-fire-flame-curved" style={{ color: 'var(--warning)' }}></i>
             </div>
             <div>
-              <div className="fw-bold text-white" style={{ fontSize: '1.5rem', lineHeight: 1 }}>
+              <div className="fw-bold text-white" style={{ fontSize: '1.6rem', lineHeight: 1, letterSpacing: '-0.02em' }}>
                 {quizzes.filter(q => (q.questions?.length || 0) > 0).length}
               </div>
-              <div style={{ color: '#94a3b8', fontSize: '0.82rem', marginTop: '4px' }}>Đề có sẵn câu hỏi</div>
+              <div style={{ color: '#9ca3af', fontSize: '0.8rem', marginTop: '6px' }}>Đề có sẵn câu hỏi</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Error */}
+      {/* Error messages */}
       {error && (
         <div className="mb-4 p-3 animate-fade-in" style={{
-          background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)',
-          borderRadius: '12px', color: '#f87171',
+          background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.2)',
+          borderRadius: '12px', color: 'var(--danger)',
         }}>
           <i className="fa-solid fa-circle-exclamation me-2"></i>{error}
         </div>
@@ -420,73 +404,74 @@ const UserDashboard = () => {
         <div className="glass-panel text-center py-5 my-4">
           <i className="fa-solid fa-receipt d-block mb-3 text-muted" style={{ fontSize: '3rem' }}></i>
           <h5 className="text-white mt-3">Chưa có đề thi nào</h5>
-          <p style={{ color: '#64748b' }}>Hiện tại hệ thống chưa có bộ đề thi. Vui lòng quay lại sau!</p>
+          <p style={{ color: '#6b7280' }}>Hiện tại hệ thống chưa có bộ đề thi. Vui lòng quay lại sau!</p>
         </div>
       ) : (
         <div className="row g-4">
           {quizzes.map((quiz, idx) => {
             const questionCount = quiz.questions?.length || 0;
             const hasQuestions = questionCount > 0;
-            // Gradient colors cycling
+            
+            // Subtle theme accents
             const gradients = [
-              ['rgba(99,102,241,0.2)', 'rgba(168,85,247,0.15)'],
-              ['rgba(16,185,129,0.2)', 'rgba(99,102,241,0.15)'],
-              ['rgba(245,158,11,0.2)', 'rgba(239,68,68,0.15)'],
-              ['rgba(168,85,247,0.2)', 'rgba(16,185,129,0.15)'],
+              ['rgba(129,140,248,0.15)', 'rgba(192,132,252,0.1)'],
+              ['rgba(52,211,153,0.15)', 'rgba(129,140,248,0.1)'],
+              ['rgba(251,191,36,0.15)', 'rgba(248,113,113,0.1)'],
+              ['rgba(192,132,252,0.15)', 'rgba(52,211,153,0.1)'],
             ];
             const [g1, g2] = gradients[idx % gradients.length];
-            const iconColors = ['var(--primary)', '#10b981', '#f59e0b', 'var(--secondary)'];
+            const iconColors = ['var(--primary)', 'var(--success)', 'var(--warning)', 'var(--secondary)'];
             const iconColor = iconColors[idx % iconColors.length];
 
             return (
               <div key={quiz._id} className="col-md-6 col-lg-4">
                 <div style={{
-                  background: 'rgba(30,41,59,0.55)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'rgba(15, 23, 42, 0.45)',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
                   borderRadius: '18px',
-                  padding: '24px',
+                  padding: '26px',
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                   position: 'relative',
                   overflow: 'hidden',
                 }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.transform = 'translateY(-6px)';
                     e.currentTarget.style.borderColor = `${iconColor}44`;
-                    e.currentTarget.style.boxShadow = `0 12px 35px rgba(0,0,0,0.25)`;
+                    e.currentTarget.style.boxShadow = `0 15px 35px rgba(0,0,0,0.3), 0 0 20px ${iconColor}10`;
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
-                  {/* Gradient accent top-right */}
+                  {/* Subtle top corner gradient mesh */}
                   <div style={{
                     position: 'absolute', top: 0, right: 0,
-                    width: '120px', height: '120px', borderRadius: '0 18px 0 0',
+                    width: '120px', height: '120px',
                     background: `radial-gradient(circle at top right, ${g1} 0%, transparent 70%)`,
                     pointerEvents: 'none',
                   }}></div>
 
-                  {/* Card icon + question count */}
-                  <div className="d-flex align-items-center justify-content-between mb-3">
+                  {/* Header: Icon & count */}
+                  <div className="d-flex align-items-center justify-content-between mb-4">
                     <div style={{
-                      width: '46px', height: '46px', borderRadius: '12px',
+                      width: '44px', height: '44px', borderRadius: '12px',
                       background: `linear-gradient(135deg, ${g1}, ${g2})`,
-                      border: `1px solid ${iconColor}33`,
+                      border: `1px solid ${iconColor}25`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '1.2rem', flexShrink: 0,
+                      fontSize: '1.15rem', flexShrink: 0,
                     }}>
                       <i className="fa-solid fa-scroll" style={{ color: iconColor }}></i>
                     </div>
                     <div style={{
-                      display: 'flex', alignItems: 'center', gap: '5px',
-                      background: hasQuestions ? `${iconColor}18` : 'rgba(100,116,139,0.15)',
-                      border: `1px solid ${hasQuestions ? iconColor + '33' : 'rgba(100,116,139,0.25)'}`,
-                      color: hasQuestions ? iconColor : '#64748b',
+                      display: 'flex', alignItems: 'center', gap: '6px',
+                      background: hasQuestions ? `${iconColor}15` : 'rgba(255,255,255,0.06)',
+                      border: `1px solid ${hasQuestions ? iconColor + '30' : 'rgba(255,255,255,0.1)'}`,
+                      color: hasQuestions ? iconColor : '#9ca3af',
                       borderRadius: '20px', padding: '4px 12px',
                       fontSize: '0.8rem', fontWeight: 600,
                     }}>
@@ -495,51 +480,47 @@ const UserDashboard = () => {
                     </div>
                   </div>
 
-                  {/* Title */}
+                  {/* Details */}
                   <h5 className="fw-bold text-white mb-2" style={{
-                    fontSize: '1.05rem', letterSpacing: '-0.02em',
+                    fontSize: '1.1rem', letterSpacing: '-0.02em',
                     overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                   }}>
-                    {quiz.title || <span style={{ color: '#64748b', fontStyle: 'italic' }}>Chưa có tiêu đề</span>}
+                    {quiz.title || <span style={{ color: '#4b5563', fontStyle: 'italic' }}>Chưa có tiêu đề</span>}
                   </h5>
 
-                  {/* Description */}
-                  <p style={{
-                    color: '#94a3b8', fontSize: '0.875rem', lineHeight: '1.55',
-                    flexGrow: 1, marginBottom: '20px',
+                  <p className="small mb-4" style={{
+                    color: '#9ca3af', lineHeight: '1.6',
+                    flexGrow: 1,
                     display: '-webkit-box', WebkitLineClamp: 3,
                     WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                    minHeight: '60px',
+                    minHeight: '58px',
                   }}>
-                    {quiz.description || 'Chưa có mô tả. Hãy bắt đầu làm bài để khám phá nội dung đề thi này!'}
+                    {quiz.description || 'Chưa có mô tả chi tiết cho bộ đề thi này. Nhấn bắt đầu để khám phá các câu hỏi ngay!'}
                   </p>
 
-                  {/* Divider */}
-                  <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)', marginBottom: '16px' }}></div>
+                  <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)', marginBottom: '20px' }}></div>
 
-                  {/* CTA Button */}
+                  {/* Actions */}
                   <button
                     onClick={() => handleStartQuiz(quiz._id)}
-                    style={{
-                      width: '100%',
-                      background: hasQuestions
-                        ? `linear-gradient(135deg, var(--primary), var(--secondary))`
-                        : 'rgba(30,41,59,0.6)',
-                      border: hasQuestions ? 'none' : '1px solid rgba(255,255,255,0.1)',
-                      color: hasQuestions ? 'white' : '#64748b',
-                      borderRadius: '12px', padding: '12px',
-                      cursor: hasQuestions ? 'pointer' : 'not-allowed',
-                      fontSize: '0.9rem', fontWeight: 600,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                      transition: 'all 0.2s',
-                      boxShadow: hasQuestions ? '0 4px 15px rgba(99,102,241,0.25)' : 'none',
-                    }}
+                    className={`w-100 btn-magnetic ${hasQuestions ? 'btn btn-primary' : 'btn btn-secondary text-muted'}`}
+                    style={{ borderRadius: '12px', padding: '12px' }}
                     disabled={!hasQuestions}
                   >
                     {hasQuestions ? (
-                      <><i className="fa-solid fa-play" style={{ fontSize: '0.8rem' }}></i> Bắt đầu làm bài</>
+                      <>
+                        Bắt đầu làm bài
+                        <span className="btn-icon-wrapper ms-2">
+                          <i className="fa-solid fa-play" style={{ fontSize: '0.75rem' }}></i>
+                        </span>
+                      </>
                     ) : (
-                      <><i className="fa-solid fa-lock" style={{ fontSize: '0.8rem' }}></i> Chưa có câu hỏi</>
+                      <>
+                        Chưa có câu hỏi
+                        <span className="btn-icon-wrapper ms-2">
+                          <i className="fa-solid fa-lock" style={{ fontSize: '0.75rem' }}></i>
+                        </span>
+                      </>
                     )}
                   </button>
                 </div>

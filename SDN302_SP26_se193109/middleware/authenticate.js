@@ -82,8 +82,8 @@ exports.verifyAuthor = (req, res, next) => {
                 return next(err);
             }
 
-            // Cho phép tác giả hoặc Admin thực hiện thay đổi
-            if (req.user.admin || (question.author && question.author.equals(req.user._id))) {
+            // Chỉ cho phép tác giả thực hiện thay đổi (không có admin bypass)
+            if (question.author && question.author.equals(req.user._id)) {
                 return next();
             } else {
                 const err = new Error('Bạn không có quyền chỉnh sửa câu hỏi của người khác!');

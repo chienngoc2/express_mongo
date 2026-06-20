@@ -9,11 +9,12 @@ const authenticate = require('../middleware/authenticate');
    ========================================== */
 router.post('/signup', async (req, res, next) => {
     try {
-        // Khởi tạo một đối tượng User mới với username lấy từ body
-        // Trường admin sẽ tự động nhận giá trị false (mặc định)
-        const newUser = new User({ username: req.body.username });
+        const isAdmin = req.body.admin === 1 || req.body.admin === '1' || req.body.admin === true || req.body.admin === 'true';
+        const newUser = new User({ 
+            username: req.body.username,
+            admin: isAdmin
+        });
 
-        // Dùng hàm .register() của passport-local-mongoose để tự động băm (hash) mật khẩu bí mật
         const user = await User.register(newUser, req.body.password);
 
         // Đăng ký thành công, phản hồi về cho client

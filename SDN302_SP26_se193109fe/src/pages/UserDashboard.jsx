@@ -339,7 +339,7 @@ const UserDashboard = () => {
           </div>
           <div>
             <h2 className="fw-bold text-white mb-0" style={{ fontSize: '1.7rem', letterSpacing: '-0.03em' }}>
-              Xin chào, <span style={{ color: 'var(--primary)' }}>{user?.username || 'Học viên'}</span>! 👋
+              Xin chào, <span style={{ color: 'var(--primary)' }}>{user?.username || 'Học viên'}</span>!
             </h2>
             <p className="small text-muted mb-0 mt-1">
               Chọn một bộ đề thi bên dưới để bắt đầu rèn luyện kỹ năng của bạn.
